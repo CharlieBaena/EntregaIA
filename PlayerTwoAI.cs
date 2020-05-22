@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerTwoAI : AI
+public class PlayerTwoAi : AI
 {
-    public int limite = 2;
+    public int limite = 7;
 
 
     private int ultimaColunma = -1;
@@ -38,7 +38,7 @@ public class PlayerTwoAI : AI
 
             Vector2 movimiento = MinimaxAB(board, 0, true, -Mathf.Infinity, Mathf.Infinity);
 
-            Debug.Log("Columna que pasamos en nextMove " + movimiento.x);
+            //Debug.Log("Columna que pasamos en nextMove " + movimiento.x);
             ultimaColunma = (int)movimiento.x;
 
             miCopiaFinal = AñadirFichaAColumna(board, (int)movimiento.x, Piece.PlayerTwo);
@@ -70,7 +70,7 @@ public class PlayerTwoAI : AI
         List<int> posiblesMovimientos = PosiblesColumnas(estadoTablero);
         float alfaTemp = alfa, betaTemp = beta;
 
-        Debug.Log("entroMinMax");
+        //Debug.Log("entroMinMax");
 
         if (profundidad == limite || GameOver(estadoTablero,Piece.PlayerTwo) || GameOver(estadoTablero,Piece.PlayerOne))
         {
@@ -81,31 +81,32 @@ public class PlayerTwoAI : AI
             if (maximizamos)
             {
                 maxValoracion = new Vector2(0f, -Mathf.Infinity); //Inicializamos la maxima valoracion 
-                Debug.Log("Maximizamos a profundida " + profundidad);
+                //Debug.Log("Maximizamos a profundida " + profundidad);
 
                 for (int i = 0; i < posiblesMovimientos.Count; i++)
                 {
-                    Debug.Log("Maximizamos");
+                    //Debug.Log("Maximizamos");
                     valoracionColum = MinimaxAB(AñadirFichaAColumna(estadoTablero, posiblesMovimientos[i], Piece.PlayerTwo), profundidad + 1, false, alfaTemp, betaTemp); //Aumentamos profundidad
                     valoracionColum.x = i; //not sure
-                    Debug.Log("Resultado heuristica " + valoracionColum.y + " en columna " + i + " " + valoracionColum.x);
+                    //Debug.Log("Resultado heuristica " + valoracionColum.y + " en columna " + valoracionColum.x + " en max");
 
                     if (maxValoracion.y < valoracionColum.y)
                     {                                                   //Comprobamos si nuestra ultima valoracion es mayor que la valoracion maxima
-                        Debug.Log("la valoracion maxima cambia de " + maxValoracion.y + " a " + valoracionColum.y);
+                        //Debug.Log("la valoracion maxima cambia de " + maxValoracion.y + " a " + valoracionColum.y);
                         maxValoracion = valoracionColum;
+                        //Debug.Log("MaxValoracion = " + maxValoracion.x + " " + maxValoracion.y);
                     }
 
 
                     if (alfaTemp < valoracionColum.y)
                     {                                                    //Comprobamos si nuestra alfa es menor que la ultima valoracion
-                        Debug.Log("la alfa cambia de " + alfaTemp + " a " + valoracionColum.y);
+                        //Debug.Log("la alfa cambia de " + alfaTemp + " a " + valoracionColum.y);
                         alfaTemp = valoracionColum.y;
                     }
 
                     if (betaTemp <= alfaTemp)
                     {                                                    //Comprobamos si tenemos que podar
-                        Debug.Log("la beta es " + betaTemp + " que es menor o igual que alfa " + alfaTemp);
+                       // Debug.Log("la beta es " + betaTemp + " que es menor o igual que alfa " + alfaTemp);
                         break;
                     }
 
@@ -116,30 +117,31 @@ public class PlayerTwoAI : AI
             }
             else
             {
-                minValoracion = new Vector2(0f, -Mathf.Infinity);
-                Debug.Log("Minimizamos a profundida " + profundidad);
+                minValoracion = new Vector2(0f, Mathf.Infinity);
+                //Debug.Log("Minimizamos a profundida " + profundidad);
 
                 for (int i = 0; i < posiblesMovimientos.Count; i++)
                 {
-                    Debug.Log("Minimizamos");
+                    //Debug.Log("Minimizamos");
                     valoracionColum = MinimaxAB(AñadirFichaAColumna(estadoTablero, posiblesMovimientos[i], Piece.PlayerOne), profundidad + 1, true, alfaTemp, betaTemp); //Aumentamos profundidad
                     valoracionColum.x = i; //not sure
-                    Debug.Log("Resultado heuristica " + valoracionColum.y + " en columna " + i + " " + valoracionColum.x);
+                    //Debug.Log("Resultado heuristica " + valoracionColum.y + " en columna " + valoracionColum.x  + " en min");
 
                     if (minValoracion.y > valoracionColum.y)
                     {                                                       //Comprobamos si nuestra ultima valoracion es menor que la valoracion minima
-                        Debug.Log("la valoracion minima cambia de " + minValoracion.y + " a " + valoracionColum.y);
+                        //Debug.Log("la valoracion minima cambia de " + minValoracion.y + " a " + valoracionColum.y);
                         minValoracion = valoracionColum;
+                        //Debug.Log("MaxValoracion = " + minValoracion.x + " " + minValoracion.y);
                     }
 
                     if (betaTemp > valoracionColum.y)
                     {                                                       //Comprobamos si nuestra beta es mayor que la ultima valoracion
-                        Debug.Log("la beta cambia de " + betaTemp + " a " + valoracionColum.y);
+                        //Debug.Log("la beta cambia de " + betaTemp + " a " + valoracionColum.y);
                         betaTemp = valoracionColum.y;
                     }
                     if (betaTemp <= alfaTemp)
                     {                                                       //Comprobamos si tenemos que podar
-                        Debug.Log("la beta es " + betaTemp + " que es menor o igual que alfa " + alfaTemp);
+                        //Debug.Log("la beta es " + betaTemp + " que es menor o igual que alfa " + alfaTemp);
                         break;
                     }
 
@@ -235,7 +237,7 @@ public class PlayerTwoAI : AI
     {
         Vector2 res = new Vector2();
         int valorFichasPlayerOne = 0, valorFichasPlayerTwo = 0, valorAmenazasVerticalesPlayerOne = 0, valorAmenazasVerticalesPlayerTwo = 0, valorAmenazasDiagonalesPlayerOne = 0, valorAmenazasDiagonalesPlayerTwo = 0, valorAmenazasHorizontalesPlayerOne = 0, valorAmenazasHorizontalesPlayerTwo = 0;
-        Debug.Log("Heuristica");
+        //Debug.Log("Heuristica");
 
         if (!GameOver(tablero, Piece.PlayerOne) && !GameOver(tablero, Piece.PlayerTwo))
         {    //Si no hemos llegado con un posicion de fin de juego
@@ -243,10 +245,14 @@ public class PlayerTwoAI : AI
 
             valorFichasPlayerTwo = ValoracionTablero(tablero, Piece.PlayerTwo);             //Valoramos el valor de cada ficha de player 2
             valorFichasPlayerOne = -ValoracionTablero(tablero, Piece.PlayerOne);            //Valoramos el valor de cada ficha de player 1 y le invertimos el valor
+            //Debug.Log("Valor fichas p2 " + valorFichasPlayerTwo);
+            //Debug.Log("Valor fichas p1 " + valorFichasPlayerOne);
+
 
             //Buscamos si existen amenazas verticales de victoria del player 1
             if (isNFichasEnVertical(3, tablero, Piece.PlayerOne))
             {
+                //Debug.Log("Entro a amenazas verticales de player 1");
                 List<List<Vector2>> amenazasVerticales = new List<List<Vector2>>();
 
                 amenazasVerticales = DevolverAmenazasFichasEnVertical(tablero, Piece.PlayerOne);    //Almacenamos todas las posiciones de dichas amenazas
@@ -262,11 +268,13 @@ public class PlayerTwoAI : AI
                 }
 
                 valorAmenazasVerticalesPlayerOne = -valorAmenazasVerticalesPlayerOne;               //Al ser el player enemigo, invertimos su valor
+                //Debug.Log("resultado " + valorAmenazasVerticalesPlayerOne);
             }
 
             //Buscamos si existen amenazas verticales de victoria del player 2
             if (isNFichasEnVertical(3, tablero, Piece.PlayerTwo))
             {
+                //Debug.Log("Entro a amenazas verticales de player 2");
                 List<List<Vector2>> amenazasVerticales = new List<List<Vector2>>();
 
                 amenazasVerticales = DevolverAmenazasFichasEnVertical(tablero, Piece.PlayerTwo);    //Almacenamos todas las posiciones de dichas amenazas
@@ -280,12 +288,13 @@ public class PlayerTwoAI : AI
                     }
                     valorAmenazasVerticalesPlayerTwo += valorAmenaza;
                 }
-
+                //Debug.Log("resultado " + valorAmenazasVerticalesPlayerTwo);
             }
 
             //Buscamos si existen amenazas diagonales de victoria de player 1
             if (isNFichasEnDiagonal(3, tablero, Piece.PlayerOne))
             {
+                //Debug.Log("Entro a amenazas diagonales de player 1");
                 List<List<Vector2>> amenazasDiagonales = new List<List<Vector2>>();
 
                 amenazasDiagonales = DevolverAmenazasFichasEnDiagonal(tablero, Piece.PlayerOne);        //Almacenamos todas las posiciones de dichas amenazas
@@ -318,12 +327,13 @@ public class PlayerTwoAI : AI
                 }
 
                 valorAmenazasDiagonalesPlayerOne = -valorAmenazasDiagonalesPlayerOne;
-
+                //Debug.Log("resultado " + valorAmenazasDiagonalesPlayerOne);
             }
 
             //Buscamos si existen amenazas diagonales de victoria de player 2
             if (isNFichasEnDiagonal(3, tablero, Piece.PlayerTwo))
             {
+                //Debug.Log("Entro a amenazas diagonales de player 2");
                 List<List<Vector2>> amenazasDiagonales = new List<List<Vector2>>();
 
                 amenazasDiagonales = DevolverAmenazasFichasEnDiagonal(tablero, Piece.PlayerOne);        //Almacenamos todas las posiciones de dichas amenazas
@@ -354,10 +364,12 @@ public class PlayerTwoAI : AI
                     }
                     valorAmenazasDiagonalesPlayerTwo += valorAmenaza;
                 }
+                //Debug.Log("resultado " + valorAmenazasDiagonalesPlayerTwo);
             }
 
             if (isNFichasEnHorizontal(3, tablero, Piece.PlayerOne))
             {
+                //Debug.Log("Entro a amenazas horizontales de player 1");
                 List<List<Vector2>> amenazasHorizontales = new List<List<Vector2>>();
 
                 amenazasHorizontales = DevolverAmenazasFichasEnHorizontal(tablero, Piece.PlayerOne);        //Almacenamos todas las posiciones de dichas amenazas
@@ -389,10 +401,12 @@ public class PlayerTwoAI : AI
                     valorAmenazasHorizontalesPlayerOne += valorAmenaza;
                 }
                 valorAmenazasHorizontalesPlayerOne = -valorAmenazasHorizontalesPlayerOne;
+                //Debug.Log("resultado " + valorAmenazasHorizontalesPlayerOne);
             }
 
             if (isNFichasEnHorizontal(3, tablero, Piece.PlayerTwo))
             {
+                //Debug.Log("Entro a amenazas Horizontales de player 2");
                 List<List<Vector2>> amenazasHorizontales = new List<List<Vector2>>();
 
                 amenazasHorizontales = DevolverAmenazasFichasEnHorizontal(tablero, Piece.PlayerTwo);        //Almacenamos todas las posiciones de dichas amenazas
@@ -422,6 +436,7 @@ public class PlayerTwoAI : AI
 
                     }
                     valorAmenazasHorizontalesPlayerTwo += valorAmenaza;
+                    //Debug.Log("resultado " + valorAmenazasHorizontalesPlayerTwo);
                 }
             }
 
