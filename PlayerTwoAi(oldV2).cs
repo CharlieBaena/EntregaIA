@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerTwoAI : AI
+public class PlayerTwoAi : AI
 {
     public int limite = 7;
 
@@ -222,7 +222,7 @@ public class PlayerTwoAI : AI
             res.Add(new List<Piece>());
             for (int y = 0; y < Config.numRows; y++)
             {
-                res[x].Add(tablero[x][y]);  //a veces, cuando activas y desactivas el modo contra AI, al volver a activar contra player, no coge la referencia al board de la clase padre AI y da fallo aqui ---> solucion, reiniciar unity
+                res[x].Add(tablero[x][y]);
             }
         }
 
@@ -597,13 +597,9 @@ public class PlayerTwoAI : AI
             for (int y = Config.numRows - 1; y >= 0; y--)
             {
                 if (tablero[x][y] == pieza)
-                {
                     contadorCeldasConsecutivas++;
-                }
                 else
-                {
                     contadorCeldasConsecutivas = 0;
-                }
 
                 if (contadorCeldasConsecutivas == n)
                     return true;
@@ -658,19 +654,19 @@ public class PlayerTwoAI : AI
                 //Primera ficha - Digagonal superior derecha
                 if (tablero[x][y] == pieza) 
                 {
-                    if (x + 1 < Config.numColumns && y - 1 >= 0) //Comprobamos siguiente ficha arriba derecha existe
+                    if (x - 1 >= 0 && y + 1 < Config.numRows) //Comprobamos siguiente ficha arriba derecha existe
                     {
-                        if (tablero[x + 1][y - 1] == pieza)         //Segunda ficha
+                        if (tablero[x - 1][y + 1] == pieza)         //Segunda ficha
                         {
-                            if (x + 2 < Config.numColumns && y - 2 >= 0)    //Comprobamos siguiente ficha 2 arriba 2 derecha existe
+                            if (x - 2 >= 0 && y + 2 < Config.numRows)    //Comprobamos siguiente ficha 2 arriba 2 derecha existe
                             {
-                                if (tablero[x + 2][y - 2] == pieza)         //Tercera ficha
+                                if (tablero[x - 2][y + 2] == pieza)         //Tercera ficha
                                 {
                                     if (n == 4)                                    //Queremos comprobar 4 seguidas y no 3
                                     {
-                                        if (x + 3 < Config.numColumns && y - 3 >= 0)    //Comprobamos siguiente ficha 3 abajo 3 derecha existe
+                                        if (x - 3 >= 0 && y + 3 < Config.numRows)    //Comprobamos siguiente ficha 3 abajo 3 derecha existe
                                         {
-                                            if (tablero[x + 3][y - 3] == pieza)                     //Cuarta ficha
+                                            if (tablero[x - 3][y + 3] == pieza)                     //Cuarta ficha
                                             {
                                                 return true;
                                             }
@@ -796,19 +792,11 @@ public class PlayerTwoAI : AI
                 }
                 else
                 {
-                    if (tablero[x][y] == Piece.Empty && contadorCeldasConsecutivas == 3)
-                    {
-                        contadorCeldasConsecutivas++;
-                        conjuntoPosiciones.Add(new Vector2(x, y));
-                    }
-                    else
-                    {
-                        contadorCeldasConsecutivas = 0;
-                        conjuntoPosiciones.Clear();
-                    }
+                    contadorCeldasConsecutivas = 0;
+                    conjuntoPosiciones.Clear();
                 }
 
-                if (contadorCeldasConsecutivas == 4)
+                if (contadorCeldasConsecutivas == 3)
                 {
                     listaPosiciones.Add(conjuntoPosiciones);
                 }
